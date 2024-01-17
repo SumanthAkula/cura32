@@ -2,15 +2,25 @@
 
 void set_led_task(void *args) {
   for (;;) {
-    setLEDStrip2();
     FastLED.show();
     vTaskDelay(33 / portTICK_RATE_MS);
   }
 }
 
+void get_button_task(void *args) {
+	int last = 0;
+	for (;;) {
+		int current = digitalRead(BUTTON_PIN);
+		vTaskDelay(5 / portTICK_RATE_MS);	// debounce time
+		if (current == 1 && last == 0) {
+			low_light = !low_light;
+		}
+	}
+}
+
 void setup() {
-  car = Car();
   Serial.begin(115200);
+  car = Car();
   pinMode(BUTTON_PIN, INPUT_PULLUP);
 
   FastLED.addLeds<SK6812, DEBUG_LED_PIN, GRB>(debug_led, 1);
@@ -40,6 +50,7 @@ void setup() {
   }
 
   xTaskCreatePinnedToCore(set_led_task, "LED Task", 4096, NULL, 1, NULL, 0);
+  xTaskCreatePinnedToCore(get_button_task, "Button Task", 4096, NULL, 1, NULL, 0);
 
   startBT();
 
@@ -92,6 +103,10 @@ int isBrakePressed(const twai_message_t message) {
 
 void setLEDStrip2() {
   FastLED.clear();
+
+  if (low_light) {
+	FastLED.setBrightness(50);
+  }
 
   if (car.braking()) {
     for (int i = 0; i < LED_COUNT; i++) {

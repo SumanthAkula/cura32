@@ -29,6 +29,7 @@ BLECharacteristic *can_frame_characteristic;     // READ PERMISSION
 BLECharacteristic *display_mode_characteristic;  // WRITE PERMISSION
 bool ble_connected;		// DEFAULT FALSE
 bool prioritizeSpeed;	// DEFAULT FALSE; send only frames with ID 777 if true
+bool low_light = false;	// DEFAULT FALSE; when true it sets the max brightness to 50
 
 class DisplayModeCharacteristicCallbacks : public BLECharacteristicCallbacks {
   void onWrite(BLECharacteristic *pCharacteristic) override {
