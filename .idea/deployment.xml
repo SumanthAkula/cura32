@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PublishConfigData" remoteFilesAllowedToDisappearOnAutoupload="false">
+    <serverData>
+      <paths name="zeus remote (fbb27939-d2a7-431c-bafa-bc5aa6a6fe84)">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/tmp/240111-130817-esp32-s3-devkitc-1" local="$PROJECT_DIR$" />
+          </mappings>
+        </serverdata>
+      </paths>
+    </serverData>
+  </component>
+</project>
