@@ -1,8 +1,9 @@
 #ifndef CANCONTROLLER_H
 #define CANCONTROLLER_H
 
-#include <cstring>
 #include <sys/_stdint.h>
+
+#include <cstring>
 
 #include "driver/twai.h"
 
@@ -28,56 +29,56 @@
 // };
 
 class CanFrame {
-private:
-  uint32_t id;
-  uint8_t dlc;
-  uint8_t data[8];
+   private:
+    uint32_t id;
+    uint8_t dlc;
+    uint8_t data[8];
 
-public:
-  CanFrame(twai_message_t message) {
-    this->id = message.identifier;
-    this->dlc = message.data_length_code;
-    memcpy(this->data, message.data, message.data_length_code);
-  }
+   public:
+    CanFrame(twai_message_t message) {
+        this->id = message.identifier;
+        this->dlc = message.data_length_code;
+        memcpy(this->data, message.data, message.data_length_code);
+    }
 
-  CanFrame(uint32_t id, uint8_t dlc, uint8_t data[]) {
-    this->id = id;
-    this->dlc = dlc;
-    memcpy(this->data, data, dlc);
-  }
+    CanFrame(uint32_t id, uint8_t dlc, uint8_t data[]) {
+        this->id = id;
+        this->dlc = dlc;
+        memcpy(this->data, data, dlc);
+    }
 
-  uint32_t get_id() {
-    return this->id;
-  }
+    uint32_t get_id() {
+        return this->id;
+    }
 
-  uint8_t get_dlc() {
-    return this->dlc;
-  }
+    uint8_t get_dlc() {
+        return this->dlc;
+    }
 
-  uint8_t *get_data() {
-    return this->data;
-  }
+    uint8_t *get_data() {
+        return this->data;
+    }
 };
 
 class CanController {
-public:
-  /**
-   * @brief Start the CAN system
-   * @return 
-   *    - 0 if success
-   *    - 1 if driver error
-   *    - 2 if start error
-   *    - 3 if alerts error 
-   */
-  static int startCAN(twai_general_config_t g_config, twai_timing_config_t t_config, twai_filter_config_t f_config);
+   public:
+    /**
+     * @brief Start the CAN system
+     * @return
+     *    - 0 if success
+     *    - 1 if driver error
+     *    - 2 if start error
+     *    - 3 if alerts error
+     */
+    static int startCAN(twai_general_config_t g_config, twai_timing_config_t t_config, twai_filter_config_t f_config);
 
-  /**
-   * @brief Prints a CAN frame to the Serial monitor. 
-   * 
-   * This is useful along with the utility from @link 
-   */
-  static void serialSendFrame(CanFrame frame);
-  static CanFrame genRandRPMFrame();
+    /**
+     * @brief Prints a CAN frame to the Serial monitor.
+     *
+     * This is useful along with the utility from @link
+     */
+    static void serialSendFrame(CanFrame frame);
+    static CanFrame genRandRPMFrame();
 };
 
 #endif

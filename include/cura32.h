@@ -1,16 +1,15 @@
 #ifndef CURA32_H
 #define CURA32_H
 
-#include "driver/twai.h"
 #include <BLEDevice.h>
 #include <BLEServer.h>
 #include <BLEUtils.h>
-
 #include <FastLED.h>
-#include "FastLED_RGBW.h"
 
-#include "car.h"
+#include "FastLED_RGBW.h"
 #include "cancontroller.h"
+#include "car.h"
+#include "driver/twai.h"
 
 #define LED_COUNT 8
 #define LED_PIN 6
@@ -27,32 +26,32 @@ BLEServer *server;
 BLEService *car_service;
 BLECharacteristic *can_frame_characteristic;     // READ PERMISSION
 BLECharacteristic *display_mode_characteristic;  // WRITE PERMISSION
-bool ble_connected;		// DEFAULT FALSE
-bool prioritizeSpeed;	// DEFAULT FALSE; send only frames with ID 777 if true
-bool low_light = false;	// DEFAULT FALSE; when true it sets the max brightness to 50
+bool ble_connected;                              // DEFAULT FALSE
+bool prioritizeSpeed;                            // DEFAULT FALSE; send only frames with ID 777 if true
+bool low_light = false;                          // DEFAULT FALSE; when true it sets the max brightness to 50
 
 class DisplayModeCharacteristicCallbacks : public BLECharacteristicCallbacks {
-  void onWrite(BLECharacteristic *pCharacteristic) override {
-    prioritizeSpeed = *((bool *)pCharacteristic->getData());
-  }
+    void onWrite(BLECharacteristic *pCharacteristic) override {
+        prioritizeSpeed = *((bool *)pCharacteristic->getData());
+    }
 };
 
 class ServerCallbacks : public BLEServerCallbacks {
-  void onConnect(BLEServer *pServer) override {
-    Serial.println("Central connected");
-    FastLED.show();
-    ble_connected = true;
-  }
+    void onConnect(BLEServer *pServer) override {
+        Serial.println("Central connected");
+        FastLED.show();
+        ble_connected = true;
+    }
 
-  void onDisconnect(BLEServer *pServer) override {
-    Serial.println("Central disconnected");
-    FastLED.show();
-    ble_connected = false;
+    void onDisconnect(BLEServer *pServer) override {
+        Serial.println("Central disconnected");
+        FastLED.show();
+        ble_connected = false;
 
-    BLEAdvertising *pAdvertising = server->getAdvertising();
-    pAdvertising->addServiceUUID(CAR_SERVICE_UUID);
-    pAdvertising->start();
-  }
+        BLEAdvertising *pAdvertising = server->getAdvertising();
+        pAdvertising->addServiceUUID(CAR_SERVICE_UUID);
+        pAdvertising->start();
+    }
 };
 
 CRGBW leds[LED_COUNT];
