@@ -29,4 +29,4 @@ This project was designed for and tested with a 2018 Acura ILX Base model. Becau
 ## Hardware and Building
 Build using the PlatformIO Visual Studio Code extension. This project was written for the ESP32-S3. A dual core ESP32 device with Bluetooth Low Energy is required, and **any target other than the ESP32-S3-DevKitC-1-N8R2 may require some modification of the project files**.
 
-The LED strip used in testing is an 8 LED RGBW NeoPixel strip from Adafruit. If more LEDs are desired, make sure to edit `include/cura32.h` and change the `LED_COUNT` and `LED_MAX_PROGRESS` values. `LED_MAX_PROGRESS` is simple the number of LEDs in use multiplied by 256
+The LED strip used in testing is an 8 LED RGBW NeoPixel strip from Adafruit. If more LEDs are desired, make sure to edit `include/cura32.h` and change the `LED_COUNT` and `LED_MAX_PROGRESS` values. `LED_MAX_PROGRESS` is simply the number of LEDs in use multiplied by 256
