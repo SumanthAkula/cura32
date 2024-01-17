@@ -115,6 +115,10 @@ void setLEDStrip2() {
 }
 
 bool shouldHandleMessage(const twai_message_t message) {
+  if (message.rtr) {
+	return false;
+  }
+
   if (prioritizeSpeed) {
     return message.identifier == 777;
   }
