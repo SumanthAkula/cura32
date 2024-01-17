@@ -6,4 +6,3 @@
 .vscode/ipch
 src/build
 .DS_Store
-lib/
