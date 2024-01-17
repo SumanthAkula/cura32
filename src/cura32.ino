@@ -2,26 +2,15 @@
 
 void set_led_task(void *args) {
     for (;;) {
+		setLEDStrip2();
         FastLED.show();
         vTaskDelay(33 / portTICK_RATE_MS);
-    }
-}
-
-void get_button_task(void *args) {
-    int last = 0;
-    for (;;) {
-        int current = digitalRead(BUTTON_PIN);
-        vTaskDelay(5 / portTICK_RATE_MS);  // debounce time
-        if (current == 1 && last == 0) {
-            low_light = !low_light;
-        }
     }
 }
 
 void setup() {
     Serial.begin(115200);
     car = Car();
-    pinMode(BUTTON_PIN, INPUT_PULLUP);
 
     FastLED.addLeds<SK6812, DEBUG_LED_PIN, GRB>(debug_led, 1);
     FastLED.addLeds<WS2812B, LED_PIN>(ledsp, getRGBWsize(LED_COUNT));
@@ -45,17 +34,16 @@ void setup() {
     // };
 
     if (CanController::startCAN(g_config, t_config, f_config) != 0) {  // startCAN() returns 0 if success
-        Serial.println("CAN Problem, CANnot continue...");
+        ESP_LOGI("Setup", "CAN Problem, CANnot continue...");
         while (true) {
         }
     }
 
     xTaskCreatePinnedToCore(set_led_task, "LED Task", 4096, NULL, 1, NULL, 0);
-    xTaskCreatePinnedToCore(get_button_task, "Button Task", 4096, NULL, 1, NULL, 0);
 
     startBT();
 
-    Serial.println("Setup finished...");
+    ESP_LOGI("Setup", "setup finished...");
 }
 
 void startBT() {
@@ -105,9 +93,12 @@ int isBrakePressed(const twai_message_t message) {
 void setLEDStrip2() {
     FastLED.clear();
 
-    if (low_light) {
+	Serial.println(car.headlights_on());
+    if (car.headlights_on()) {
         FastLED.setBrightness(50);
-    }
+    } else {
+		FastLED.setBrightness(255);
+	}
 
     if (car.braking()) {
         for (int i = 0; i < LED_COUNT; i++) {

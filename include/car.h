@@ -13,6 +13,7 @@ class Car {
     uint8_t gear;
     uint8_t turn_signals;
     bool brake;
+	bool headlights;
 
    public:
     Car() {
@@ -23,11 +24,16 @@ class Car {
         this->gear = 0;
         this->turn_signals = 0;
         this->brake = false;
+		this->headlights = false;
     }
 
     bool braking() {
         return this->brake;
     }
+
+	bool headlights_on() {
+		return this->headlights;
+	}
 
     uint8_t get_gas_pedal_position() {
         return this->gas_pedal_position;

@@ -1,4 +1,5 @@
 #include "car.h"
+#include <Arduino.h>
 
 void Car::update_car_state(twai_message_t message) {
     if (message.rtr) {
@@ -30,5 +31,8 @@ void Car::update_car_state(twai_message_t message) {
             this->turn_signals = message.data[0];
             break;
         }
+		case CRUISE_BUTTONS_FRAME_ID: {
+			this->headlights = (message.data[0] & 0x06) == 0x06;
+		}
     }
 }
