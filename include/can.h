@@ -78,6 +78,7 @@ class CanController {
      * This is useful along with the utility from @link
      */
     static void serialSendFrame(CanFrame frame);
+	static bool should_handle_message(const twai_message_t message);
     static CanFrame genRandRPMFrame();
 };
 

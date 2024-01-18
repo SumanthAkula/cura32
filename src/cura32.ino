@@ -120,17 +120,6 @@ void setLEDStrip2() {
     }
 }
 
-bool shouldHandleMessage(const twai_message_t message) {
-    if (message.rtr) {
-        return false;
-    }
-
-    if (prioritizeSpeed) {
-        return message.identifier == 777;
-    }
-    return (message.identifier == 380 || message.identifier == 342 || message.identifier == 777 || message.identifier == 419 || message.identifier == 660 || message.identifier == 422);
-}
-
 // 600 microseconds
 void ble_send_frame(twai_message_t message) {
     CanFrame frame(message);
@@ -147,7 +136,7 @@ void loop() {
     twai_message_t message;
     if (alerts & TWAI_ALERT_RX_DATA) {
         while (twai_receive(&message, 0) == ESP_OK) {
-            if (!shouldHandleMessage(message)) {
+            if (!CanController::should_handle_message(message)) {
                 continue;
             }
 
