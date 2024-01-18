@@ -93,7 +93,6 @@ int isBrakePressed(const twai_message_t message) {
 void setLEDStrip2() {
     FastLED.clear();
 
-	Serial.println(car.headlights_on());
     if (car.headlights_on()) {
         FastLED.setBrightness(50);
     } else {

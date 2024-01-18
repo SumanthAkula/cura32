@@ -28,7 +28,12 @@ BLECharacteristic *can_frame_characteristic;     // READ PERMISSION
 BLECharacteristic *display_mode_characteristic;  // WRITE PERMISSION
 bool ble_connected;                              // DEFAULT FALSE
 bool prioritizeSpeed;                            // DEFAULT FALSE; send only frames with ID 777 if true
-bool low_light = false;                          // DEFAULT FALSE; when true it sets the max brightness to 50
+
+CRGBW leds[LED_COUNT];
+CRGB *ledsp = (CRGB *)&leds[0];
+CRGB debug_led[1];
+
+Car car;
 
 class DisplayModeCharacteristicCallbacks : public BLECharacteristicCallbacks {
     void onWrite(BLECharacteristic *pCharacteristic) override {
@@ -39,12 +44,14 @@ class DisplayModeCharacteristicCallbacks : public BLECharacteristicCallbacks {
 class ServerCallbacks : public BLEServerCallbacks {
     void onConnect(BLEServer *pServer) override {
         Serial.println("Central connected");
+		debug_led[0].b = 0;
         FastLED.show();
         ble_connected = true;
     }
 
     void onDisconnect(BLEServer *pServer) override {
         Serial.println("Central disconnected");
+		debug_led[0].b = 50;
         FastLED.show();
         ble_connected = false;
 
@@ -53,11 +60,5 @@ class ServerCallbacks : public BLEServerCallbacks {
         pAdvertising->start();
     }
 };
-
-CRGBW leds[LED_COUNT];
-CRGB *ledsp = (CRGB *)&leds[0];
-CRGB debug_led[1];
-
-Car car;
 
 #endif
