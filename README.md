@@ -12,7 +12,7 @@ The objective of this project was to take certain CAN messages from the vehicle 
 In addition to the LED strip, the ESP32-S3 MCU also supports Bluetooth Low Energy functionality, which is leveraged by an accompanying custom iOS app. This app shows all the same information the LED strip can show, but also has readouts for vehicle speed, gear, and steering angle. The app also provides a view of the raw CAN bus information for select packet IDs.
 
 ## How It Works
-The use of the CAN Bus has been mandated in the OBD2 standard since 2008. Because of this, the `CAN_H` and `CAN_L` signal wires can be accessed through OBD 2 pins 4 and 16. `CAN_H` and `CAN_L` are wired to a SN65HVD230 CAN tranceiver. The SN65HVD230 `CAN_RX` and `CAN_TX` are wired up to the ESP32-S3. The exact pins are defined in `include/cura32.h` as `CAN_RX` and `CAN_TX`. The ESP32-S3 has a built in CAN controller, and using the built in Espressif TWAI API, the messages can be used to control other external hardware (i.e. the LED strip and Bluetooth module)
+The use of the CAN Bus has been mandated in the OBD2 standard since 2008. Because of this, the `CAN_H` and `CAN_L` signal wires can be accessed through OBD 2 pins 4 and 16. `CAN_H` and `CAN_L` are wired to a SN65HVD230 CAN tranceiver. The SN65HVD230 `CAN_RX` and `CAN_TX` are wired up to the ESP32-S3. The exact pins are defined in `include/can.h` as `CAN_RX` and `CAN_TX`. The ESP32-S3 has a built in CAN controller, and using the built in Espressif TWAI API, the messages can be used to control other external hardware (i.e. the LED strip and Bluetooth module)
 
 ## CAN Bus
 The CAN bus communication system that consists of 2 data lines. Each message sent on the CAN bus will have a few properties:
