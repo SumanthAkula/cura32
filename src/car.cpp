@@ -33,6 +33,11 @@ void Car::update_car_state(twai_message_t message) {
         }
 		case CRUISE_BUTTONS_FRAME_ID: {
 			this->headlights = (message.data[0] & 0x02) == 0x02;
+			break;
+		}
+		case CRUISE_FRAME_ID: {
+			this->cruise_speed = message.data[4];
+			break;
 		}
     }
 }

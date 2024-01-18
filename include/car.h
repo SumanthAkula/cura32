@@ -12,6 +12,7 @@ class Car {
     uint8_t speed;
     uint8_t gear;
     uint8_t turn_signals;
+	uint8_t cruise_speed;
     bool brake;
 	bool headlights;
 
