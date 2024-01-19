@@ -10,6 +10,7 @@ void set_led_task(void *args) {
 
 void setup() {
     Serial.begin(115200);
+	pinMode(BUTTON_PIN, INPUT_PULLUP);
     car = Car();
 
     FastLED.addLeds<SK6812, DEBUG_LED_PIN, GRB>(debug_led, 1);
