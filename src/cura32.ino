@@ -3,7 +3,7 @@
 void set_led_task(void *args) {
     for (;;) {
 		setLEDStrip2();
-        led_strip_controller->showLeds(car.headlights_on() ? 32 : 255);
+        led_strip_controller->showLeds(led_strip_brightness);
         vTaskDelay(33 / portTICK_RATE_MS);
     }
 }
@@ -83,14 +83,6 @@ void fastLedSetProgress(const int value) {
     }
 }
 
-int isBrakePressed(const twai_message_t message) {
-    if (message.identifier != 380) {
-        return 0;
-    }
-
-    return (message.data[4] & 0x01 == 1);
-}
-
 void setLEDStrip2() {
 	led_strip_controller->clearLedData();
     // FastLED.clear();
@@ -114,6 +106,8 @@ void setLEDStrip2() {
     if (turn_signals & 0x40) {
         led_strip[LED_COUNT - 1] = CRGB::Orange;
     }
+
+	led_strip_brightness = car.headlights_on() ? 32 : 255;
 }
 
 // 600 microseconds
