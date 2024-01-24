@@ -29,9 +29,13 @@ BLECharacteristic *display_mode_characteristic;  // WRITE PERMISSION
 bool ble_connected;                              // DEFAULT FALSE
 bool prioritizeSpeed;                            // DEFAULT FALSE; send only frames with ID 777 if true
 
-CRGBW leds[LED_COUNT];
-CRGB *ledsp = (CRGB *)&leds[0];
+uint8_t led_strip_brightness = 255;
+CRGBW led_strip[LED_COUNT];
+CRGB *ledsp = (CRGB *)&led_strip[0];
 CRGB debug_led[1];
+
+CLEDController *led_strip_controller;
+CLEDController *debug_led_controller;
 
 Car car;
 
@@ -45,14 +49,14 @@ class ServerCallbacks : public BLEServerCallbacks {
     void onConnect(BLEServer *pServer) override {
         Serial.println("Central connected");
 		debug_led[0].b = 0;
-        FastLED.show();
+        debug_led_controller->showLeds();
         ble_connected = true;
     }
 
     void onDisconnect(BLEServer *pServer) override {
         Serial.println("Central disconnected");
 		debug_led[0].b = 50;
-        FastLED.show();
+		debug_led_controller->showLeds();
         ble_connected = false;
 
         BLEAdvertising *pAdvertising = server->getAdvertising();

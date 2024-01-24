@@ -3,7 +3,7 @@
 void set_led_task(void *args) {
     for (;;) {
 		setLEDStrip2();
-        FastLED.show();
+        led_strip_controller->showLeds(car.headlights_on() ? 32 : 255);
         vTaskDelay(33 / portTICK_RATE_MS);
     }
 }
@@ -13,14 +13,14 @@ void setup() {
 	pinMode(BUTTON_PIN, INPUT_PULLUP);
     car = Car();
 
-    FastLED.addLeds<SK6812, DEBUG_LED_PIN, GRB>(debug_led, 1);
-    FastLED.addLeds<WS2812B, LED_PIN>(ledsp, getRGBWsize(LED_COUNT));
+    debug_led_controller = &FastLED.addLeds<SK6812, DEBUG_LED_PIN, GRB>(debug_led, 1);
+    led_strip_controller = &FastLED.addLeds<WS2812B, LED_PIN>(ledsp, getRGBWsize(LED_COUNT));
 
     debug_led[0] = 0x00FF00;
-    FastLED.show();
+    debug_led_controller->showLeds();
     vTaskDelay(1000 / portTICK_RATE_MS);
     debug_led[0] = 0x000000;
-    FastLED.show();
+    debug_led_controller->showLeds();
     vTaskDelay(1000 / portTICK_RATE_MS);
 
     twai_general_config_t g_config = TWAI_GENERAL_CONFIG_DEFAULT((gpio_num_t)CAN_TX, (gpio_num_t)CAN_RX, TWAI_MODE_LISTEN_ONLY);
@@ -40,7 +40,7 @@ void setup() {
         }
     }
 
-    xTaskCreatePinnedToCore(set_led_task, "LED Task", 4096, NULL, 1, NULL, 0);
+    xTaskCreate(set_led_task, "LED Task", 4096, NULL, 1, NULL);
 
     startBT();
 
@@ -72,13 +72,13 @@ void fastLedSetProgress(const int value) {
     for (int i = 0; i < LED_COUNT; i++) {
         if (i < numLEDsToFill) {
             // LED must be filled completely
-            leds[i] = CRGBW(0, 255, 0, 0);
+            led_strip[i] = CRGBW(0, 255, 0, 0);
         } else if (i == numLEDsToFill) {
             // LED must be filled partially
-            leds[i] = CRGBW(0, partialLEDValue, 0, 0);
+            led_strip[i] = CRGBW(0, partialLEDValue, 0, 0);
         } else {
             // LED must be off
-            leds[i] = CRGBW(0, 0, 0, 0);
+            led_strip[i] = CRGBW(0, 0, 0, 0);
         }
     }
 }
@@ -92,17 +92,12 @@ int isBrakePressed(const twai_message_t message) {
 }
 
 void setLEDStrip2() {
-    FastLED.clear();
-
-    if (car.headlights_on()) {
-        FastLED.setBrightness(50);
-    } else {
-		FastLED.setBrightness(255);
-	}
+	led_strip_controller->clearLedData();
+    // FastLED.clear();
 
     if (car.braking()) {
         for (int i = 0; i < LED_COUNT; i++) {
-            leds[i].r = 0xFF;
+            led_strip[i].r = 0xFF;
         }
     } else {
         int pos = car.get_gas_pedal_position();
@@ -113,11 +108,11 @@ void setLEDStrip2() {
     // turn the left and right LEDs orange if the indicators are on!!
     uint8_t turn_signals = car.get_turn_signals();
     if (turn_signals & 0x20) {  // check left signal
-        leds[0] = CRGB::Orange;
+        led_strip[0] = CRGB::Orange;
     }
 
     if (turn_signals & 0x40) {
-        leds[LED_COUNT - 1] = CRGB::Orange;
+        led_strip[LED_COUNT - 1] = CRGB::Orange;
     }
 }
 
