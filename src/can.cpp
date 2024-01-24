@@ -54,10 +54,6 @@ bool CanController::should_handle_message(twai_message_t message) {
         return false;
     }
 
-	if (digitalRead(0) == LOW) {
-		return !(message.identifier == 380 || message.identifier == 342 || message.identifier == 777 || message.identifier == 419 || message.identifier == 660 || message.identifier == 422 || message.identifier == 804);
-	}
-
     return (message.identifier == 380 || message.identifier == 342 || message.identifier == 777 || message.identifier == 419 || message.identifier == 660 || message.identifier == 422 || message.identifier == 804);
 }
 

@@ -126,6 +126,11 @@ void loop() {
     twai_message_t message;
     if (alerts & TWAI_ALERT_RX_DATA) {
         while (twai_receive(&message, 0) == ESP_OK) {
+			if (digitalRead(0) == LOW && message.extd) {
+				Serial.printf("EXTD: %08X\n", message.identifier);
+				continue;
+			}
+
             if (!CanController::should_handle_message(message)) {
                 continue;
             }
