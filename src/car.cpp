@@ -39,5 +39,9 @@ void Car::update_car_state(twai_message_t message) {
 			this->cruise_speed = message.data[4];
 			break;
 		}
+		case BRAKE_PRESSURE_FRAME_ID: {
+			this->brake_pressure = (message.data[0] << 8) | message.data[1];
+			break;
+		}
     }
 }

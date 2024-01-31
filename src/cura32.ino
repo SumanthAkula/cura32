@@ -89,7 +89,16 @@ void setLEDStrip2() {
 
     if (car.braking()) {
         for (int i = 0; i < LED_COUNT; i++) {
-            led_strip[i].r = 0xFF;
+			// uint8_t mapped_brake_pressure = map(car.get_brake_pressure(), 0, 0xFF, 0, 0xFFFF);
+			// Serial.printf("%d\t%d\n", car.get_brake_pressure(), mapped_brake_pressure);
+            // led_strip[i].r = _max(mapped_brake_pressure, 10);
+			uint8_t led_val = map(car.get_brake_pressure(), 0x66, 0x1FF, 0, 0xFF);
+			uint8_t led_min = 10;	// 10/255 =
+			Serial.printf("%d\t%d\n", led_val, car.get_brake_pressure());
+			if (car.headlights_on()) {
+				led_min = 35;
+			}
+			led_strip[i].r = _max(led_val, led_min);
         }
     } else {
         int pos = car.get_gas_pedal_position();
@@ -134,6 +143,10 @@ void loop() {
             if (!CanController::should_handle_message(message)) {
                 continue;
             }
+
+			if (message.identifier == 487) {
+				Serial.printf("%02X %02X\n", message.data[0], message.data[1]);
+			}
 
             car.update_car_state(message);
 

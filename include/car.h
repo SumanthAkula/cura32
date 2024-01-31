@@ -6,6 +6,7 @@
 
 class Car {
    private:
+	uint16_t brake_pressure;
     uint16_t rpm;
     int16_t steer_angle;
     uint8_t gas_pedal_position;
@@ -18,6 +19,7 @@ class Car {
 
    public:
     Car() {
+		this->brake_pressure = 0;
         this->rpm = 0;
         this->steer_angle = 0;
         this->gas_pedal_position = 0;
@@ -43,6 +45,10 @@ class Car {
     uint8_t get_turn_signals() {
         return this->turn_signals;
     }
+
+	uint16_t get_brake_pressure() {
+		return this->brake_pressure;
+	}
 
     void update_car_state(twai_message_t message);
 };
