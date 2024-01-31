@@ -2,7 +2,7 @@
 
 void set_led_task(void *args) {
     for (;;) {
-		setLEDStrip2();
+		set_led_strip();
         led_strip_controller->showLeds(led_strip_brightness);
         vTaskDelay(33 / portTICK_RATE_MS);
     }
@@ -42,12 +42,12 @@ void setup() {
 
     xTaskCreate(set_led_task, "LED Task", 4096, NULL, 1, NULL);
 
-    startBT();
+    start_ble();
 
     ESP_LOGI("Setup", "setup finished...");
 }
 
-void startBT() {
+void start_ble() {
     BLEDevice::init(DEVICE_NAME);
     server = BLEDevice::createServer();
     car_service = server->createService(CAR_SERVICE_UUID);
@@ -65,7 +65,7 @@ void startBT() {
     pAdvertising->start();
 }
 
-void fastLedSetProgress(const int value) {
+void led_set_progress(const int value) {
     int numLEDsToFill = value / 256;
     int partialLEDValue = value % 256;
 
@@ -83,7 +83,7 @@ void fastLedSetProgress(const int value) {
     }
 }
 
-void setLEDStrip2() {
+void set_led_strip() {
 	led_strip_controller->clearLedData();
     // FastLED.clear();
 
@@ -103,7 +103,7 @@ void setLEDStrip2() {
     } else {
         int pos = car.get_gas_pedal_position();
         pos = map(pos, 0, 255, 0, LED_MAX_PROGRESS);
-        fastLedSetProgress(pos);
+        led_set_progress(pos);
     }
 
     // turn the left and right LEDs orange if the indicators are on!!
