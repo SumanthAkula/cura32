@@ -92,8 +92,8 @@ void set_led_strip() {
 			// uint8_t mapped_brake_pressure = map(car.get_brake_pressure(), 0, 0xFF, 0, 0xFFFF);
 			// Serial.printf("%d\t%d\n", car.get_brake_pressure(), mapped_brake_pressure);
             // led_strip[i].r = _max(mapped_brake_pressure, 10);
-			uint8_t led_val = map(car.get_brake_pressure(), 0x66, 0x1FF, 0, 0xFF);
-			uint8_t led_min = 10;	// 10/255 =
+			uint8_t led_val = map(car.get_brake_pressure(), 0x66, 0x210, 0, 0xFF);
+			uint8_t led_min = 10;
 			Serial.printf("%d\t%d\n", led_val, car.get_brake_pressure());
 			if (car.headlights_on()) {
 				led_min = 35;
@@ -135,18 +135,9 @@ void loop() {
     twai_message_t message;
     if (alerts & TWAI_ALERT_RX_DATA) {
         while (twai_receive(&message, 0) == ESP_OK) {
-			if (digitalRead(0) == LOW && message.extd) {
-				Serial.printf("EXTD: %08X\n", message.identifier);
-				continue;
-			}
-
             if (!CanController::should_handle_message(message)) {
                 continue;
             }
-
-			if (message.identifier == 487) {
-				Serial.printf("%02X %02X\n", message.data[0], message.data[1]);
-			}
 
             car.update_car_state(message);
 
