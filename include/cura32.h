@@ -35,7 +35,7 @@ CRGB *ledsp = (CRGB *)&led_strip[0];
 CRGB debug_led[1];
 
 CLEDController *led_strip_controller;
-CLEDController *debug_led_controller;
+// CLEDController *debug_led_controller;
 
 Car car;
 
@@ -49,14 +49,14 @@ class ServerCallbacks : public BLEServerCallbacks {
     void onConnect(BLEServer *pServer) override {
         Serial.println("Central connected");
 		debug_led[0].b = 0;
-        debug_led_controller->showLeds();
+        // debug_led_controller->showLeds();
         ble_connected = true;
     }
 
     void onDisconnect(BLEServer *pServer) override {
         Serial.println("Central disconnected");
 		debug_led[0].b = 50;
-		debug_led_controller->showLeds();
+		// debug_led_controller->showLeds();
         ble_connected = false;
 
         BLEAdvertising *pAdvertising = server->getAdvertising();
