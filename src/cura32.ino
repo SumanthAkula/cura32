@@ -13,15 +13,15 @@ void setup() {
 	pinMode(BUTTON_PIN, INPUT_PULLUP);
     car = Car();
 
-    debug_led_controller = &FastLED.addLeds<SK6812, DEBUG_LED_PIN, GRB>(debug_led, 1);
+    // debug_led_controller = &FastLED.addLeds<SK6812, DEBUG_LED_PIN, GRB>(debug_led, 1);
     led_strip_controller = &FastLED.addLeds<WS2812B, LED_PIN>(ledsp, getRGBWsize(LED_COUNT));
 
-    debug_led[0] = 0x00FF00;
-    debug_led_controller->showLeds();
-    vTaskDelay(1000 / portTICK_RATE_MS);
-    debug_led[0] = 0x000000;
-    debug_led_controller->showLeds();
-    vTaskDelay(1000 / portTICK_RATE_MS);
+    // debug_led[0] = 0x00FF00;
+    // debug_led_controller->showLeds();
+    // vTaskDelay(1000 / portTICK_RATE_MS);
+    // debug_led[0] = 0x000000;
+    // debug_led_controller->showLeds();
+    // vTaskDelay(1000 / portTICK_RATE_MS);
 
     twai_general_config_t g_config = TWAI_GENERAL_CONFIG_DEFAULT((gpio_num_t)CAN_TX, (gpio_num_t)CAN_RX, TWAI_MODE_LISTEN_ONLY);
     g_config.tx_queue_len = 0;   // we don't want to transmit anything, so set the queue length to 0 to disable the queue
